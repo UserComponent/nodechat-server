@@ -2,7 +2,8 @@
   box-sizing: border-box;
 }
 body {
-  font-family: monospace;
+  font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
+  font-size: 16px;
   color: #2d3237;
   background: #f0f0f0;
 }
@@ -13,7 +14,6 @@ a:hover {
   color: #347cba;
 }
 .modal-content {
-  font-family: "Helvetica", "Arial", sans-serif;
   border-radius: 2px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;

@@ -28,6 +28,7 @@
     "jquery.hotkeys": "jquery-hotkeys#~0.2.0",
     "font-awesome": "~4.6.3",
     "bootstrap-switch": "~3.3.2",
-    "howler.js": "howler#~1.1.29"
+    "howler.js": "howler#~1.1.29",
+    "source-sans-pro": "~1.0.0"
   }
 }
