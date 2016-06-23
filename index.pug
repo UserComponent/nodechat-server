@@ -2,19 +2,45 @@ doctype html
 html
 
   head
+
+    //- Meta
     meta(charset="utf-8")
     title NodeChat
     link(rel="icon", href="/images/favicon.png")
+
+    //- Stylesheets
     link(rel="stylesheet", type="text/css", href="/bower_components/bootstrap/dist/css/bootstrap.min.css")
+    link(rel="stylesheet", type="text/css", href="/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css")
     link(rel="stylesheet", type="text/css", href="/bower_components/font-awesome/css/font-awesome.min.css")
-    link(rel="stylesheet", type="text/css", href="/styles/chat.min.css")
+    link#nc-chat-stylesheet(rel="stylesheet", type="text/css", href="/styles/chat-dark.min.css")
 
   body
 
+    //- Wrapper
     .container-fluid
 
-      //- h1 NodeChat
+      //- Settings Button & Modal
+      #nc-chat-settings-btn.fa.fa-cog.fa-2x(data-toggle="modal", data-target="#nc-chat-settings-modal")
+      #nc-chat-settings-modal.modal.fade: .modal-dialog: .modal-content
+        .modal-header
+          small Chat Settings
+        .modal-body
+          .row
+            .col-xs-6.text-center
+              strong Theme
+            .col-xs-6.text-center
+              input.ns-chat-toggle(
+                type="checkbox"
+                name="toggle-theme"
+                data-size="small"
+                data-on-text="Dark"
+                data-off-text="Light"
+                data-on-color="dark"
+                data-off-color="light"
+                data-label-text="|||"
+                checked)
 
+      //- Chat Container
       #nc-messages-container
 
       form#nc-message-form(name="chat-form",  action="")
@@ -25,5 +51,6 @@ html
       script(src="/bower_components/jquery/dist/jquery.min.js")
       script(src="/bower_components/jquery.hotkeys/jquery.hotkeys.js")
       script(src="/bower_components/bootstrap/dist/js/bootstrap.min.js")
+      script(src="/bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js")
       script(src="/socket.io/socket.io.js")
       script(src="/scripts/chat.min.js")

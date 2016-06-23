@@ -1,0 +1,14 @@
+cursor-pointer()
+  cursor: hand
+  cursor: pointer
+
+with-vendor-prefixes(property, args...)
+  {property}: args
+  -webkit-{property}: args
+  -moz-{property}: args
+
+border-radius(args...)
+  with-vendor-prefixes("border-radius", args)
+
+transform(args...)
+  with-vendor-prefixes("transform", args)

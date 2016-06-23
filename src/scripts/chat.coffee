@@ -4,10 +4,16 @@
 
   $ ->
 
-    $window    = $ window
-    chatForm   = $ "#nc-message-form"
-    chatInput  = $ "#nc-message-compose"
-    messageBuf = new BufferContainer "#nc-messages-container"
+    $window      = $ window
+    chatForm     = $ "#nc-message-form"
+    chatInput    = $ "#nc-message-compose"
+    messageBuf   = new BufferContainer "#nc-messages-container"
+    toggleBtns   = $ ".ns-chat-toggle"
+    toggleTheme  = toggleBtns.filter "[name=\"toggle-theme\"]"
+
+    # UI Init
+
+    toggleBtns.bootstrapSwitch()
 
     # Events
 
@@ -25,10 +31,35 @@
       switch chatInput.val()
         when "" then null
         when "/clear" then messageBuf.clear()
+        when "/theme:light", "/theme:dark"
+          theme = chatInput.val().split(":")[1]
+          Theme.set theme
+          toggleTheme.bootstrapSwitch "state", (if theme is "dark" then true else false), true
         else socket.emit "chat-message", chatInput.val()
       chatInput.val ""
 
+    toggleTheme.on "switchChange.bootstrapSwitch", (e, state) ->
+      if state is true then Theme.set "dark" else Theme.set "light"
+
   # Functions and Classes
+
+  class Theme
+
+    @stylesheetElement: $("#nc-chat-stylesheet")
+
+    @stylesheets:
+      light: "/styles/chat-light.min.css"
+      dark: "/styles/chat-dark.min.css"
+
+    @set: (stylesheet) ->
+      if @stylesheets[stylesheet]?
+        @stylesheetElement.attr "href", @stylesheets[stylesheet]
+        retval = true
+      else
+        console.error "stylesheet not found: #{stylesheet}"
+        retval = false
+      retval
+
 
   class BufferContainer
 

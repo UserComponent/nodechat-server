@@ -25,7 +25,7 @@ gulp.task("images", () => {
 
 // Stylus compilation and minification
 gulp.task("styles", () => {
-  gulp.src(["src/styles/**/*.styl"])
+  gulp.src(["src/styles/*.styl"])
     .pipe(plumber({
       errorHandler: (error) => {
         console.log(error.message);

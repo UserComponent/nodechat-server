@@ -1,12 +1,15 @@
 (function($, io) {
-  var BufferContainer, socket;
+  var BufferContainer, Theme, socket;
   socket = io();
   $(function() {
-    var $window, chatForm, chatInput, messageBuf;
+    var $window, chatForm, chatInput, messageBuf, toggleBtns, toggleTheme;
     $window = $(window);
     chatForm = $("#nc-message-form");
     chatInput = $("#nc-message-compose");
     messageBuf = new BufferContainer("#nc-messages-container");
+    toggleBtns = $(".ns-chat-toggle");
+    toggleTheme = toggleBtns.filter("[name=\"toggle-theme\"]");
+    toggleBtns.bootstrapSwitch();
     $window.on("resize", function() {
       return messageBuf.resize();
     });
@@ -20,7 +23,8 @@
     $window.add(chatInput).bind("keyup", "ctrl+shift+l", function(e) {
       return messageBuf.clear();
     });
-    return chatForm.on("submit", function(e) {
+    chatForm.on("submit", function(e) {
+      var theme;
       e.preventDefault();
       switch (chatInput.val()) {
         case "":
@@ -29,12 +33,50 @@
         case "/clear":
           messageBuf.clear();
           break;
+        case "/theme:light":
+        case "/theme:dark":
+          theme = chatInput.val().split(":")[1];
+          Theme.set(theme);
+          toggleTheme.bootstrapSwitch("state", (theme === "dark" ? true : false), true);
+          break;
         default:
           socket.emit("chat-message", chatInput.val());
       }
       return chatInput.val("");
     });
+    return toggleTheme.on("switchChange.bootstrapSwitch", function(e, state) {
+      if (state === true) {
+        return Theme.set("dark");
+      } else {
+        return Theme.set("light");
+      }
+    });
   });
+  Theme = (function() {
+    function Theme() {}
+
+    Theme.stylesheetElement = $("#nc-chat-stylesheet");
+
+    Theme.stylesheets = {
+      light: "/styles/chat-light.min.css",
+      dark: "/styles/chat-dark.min.css"
+    };
+
+    Theme.set = function(stylesheet) {
+      var retval;
+      if (this.stylesheets[stylesheet] != null) {
+        this.stylesheetElement.attr("href", this.stylesheets[stylesheet]);
+        retval = true;
+      } else {
+        console.error("stylesheet not found: " + stylesheet);
+        retval = false;
+      }
+      return retval;
+    };
+
+    return Theme;
+
+  })();
   return BufferContainer = (function() {
     function BufferContainer(bufferContainer) {
       this.elem = $(bufferContainer);
