@@ -1,0 +1,29 @@
+doctype html
+html
+
+  head
+    meta(charset="utf-8")
+    title NodeChat
+    link(rel="icon", href="/images/favicon.png")
+    link(rel="stylesheet", type="text/css", href="/bower_components/bootstrap/dist/css/bootstrap.min.css")
+    link(rel="stylesheet", type="text/css", href="/bower_components/font-awesome/css/font-awesome.min.css")
+    link(rel="stylesheet", type="text/css", href="/styles/chat.min.css")
+
+  body
+
+    .container-fluid
+
+      //- h1 NodeChat
+
+      #nc-messages-container
+
+      form#nc-message-form(name="chat-form",  action="")
+        input#nc-message-compose.util-full-width(type="text", autocomplete="off")
+        span.text-muted.pull-right.small.helper-text Tip: type /clear or press ctrl+shift+l to clear window
+
+      //- Scripts
+      script(src="/bower_components/jquery/dist/jquery.min.js")
+      script(src="/bower_components/jquery.hotkeys/jquery.hotkeys.js")
+      script(src="/bower_components/bootstrap/dist/js/bootstrap.min.js")
+      script(src="/socket.io/socket.io.js")
+      script(src="/scripts/chat.min.js")

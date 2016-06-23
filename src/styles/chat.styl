@@ -1,0 +1,56 @@
+theme_bg_color   = rgba(45, 50, 55, 1)
+theme_font_color = rgba(240, 240, 240, 1)
+
+*
+  box-sizing border-box
+
+body
+  font-family monospace
+  color theme_font_color
+  background theme_bg_color
+
+.util-
+  &full-width
+    width 100% !important
+
+#nc-message-form
+  position fixed
+  bottom 1em
+  right 2em
+  left 2em
+  z-index 1
+
+  input[type="text"]
+    border-width 1px
+    border-style solid
+    border-color #606060
+    background darken(theme_bg_color, 20%)
+    padding 0.5em 1em
+
+  span.helper-text
+    margin-top 0.5em
+
+#nc-messages-container
+  padding 0
+  margin 1em 1em 0
+  overflow auto
+
+.nc-chat-
+  &enter-text::before,
+  &exit-text::before
+    font-size 0.85em
+    display inline-block
+    font-family "FontAwesome"
+    margin-right 0.5em
+  &enter-text::before
+    content '\f090'
+  &exit-text::before
+    content '\f08b'
+    transform: rotate(180deg)
+    -webkit-transform: rotate(180deg)
+    -moz-transform: rotate(180deg)
+  &message-item
+    list-style none
+    padding 0
+    border-radius 2px
+    margin-bottom 0.25em
