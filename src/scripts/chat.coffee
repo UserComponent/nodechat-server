@@ -9,7 +9,7 @@
     $window      = $ window
     chatForm     = $ "#nc-message-form"
     chatInput    = $ "#nc-message-compose"
-    messageBuf   = new BufferContainer "#nc-messages-container"
+    chatWindow   = new ChatWindow "#nc-messages-container"
     toggleBtns   = $ ".ns-chat-toggle"
     toggleTheme  = toggleBtns.filter "[name=\"toggle-theme\"]"
 
@@ -19,20 +19,20 @@
 
     # Events
 
-    $window.on "resize", -> messageBuf.resize()
+    $window.on "resize", -> chatWindow.resize()
 
     socket
-      .on "chat-message", (message) -> messageBuf.addMessage message
-      .on "chat-enter", (username) -> messageBuf.addMessage "#{username} entered", "text-muted nc-chat-enter-text"
-      .on "chat-exit", (username) -> messageBuf.addMessage "#{username} left", "text-muted nc-chat-exit-text"
+      .on "chat-message", (message) -> chatWindow.addMessage message
+      .on "chat-enter", (username) -> chatWindow.addMessage "#{username} entered", "text-muted nc-chat-enter-text"
+      .on "chat-exit", (username) -> chatWindow.addMessage "#{username} left", "text-muted nc-chat-exit-text"
 
-    $window.add(chatInput).bind "keyup", "ctrl+shift+l", (e) -> messageBuf.clear()
+    $window.add(chatInput).bind "keyup", "ctrl+shift+l", (e) -> chatWindow.clear()
 
     chatForm.on "submit", (e) ->
       e.preventDefault()
       switch chatInput.val()
         when "" then null
-        when "/clear" then messageBuf.clear()
+        when "/clear" then chatWindow.clear()
         when "/theme:light", "/theme:dark"
           theme = chatInput.val().split(":")[1]
           Theme.set theme
@@ -72,7 +72,7 @@
       retval
 
 
-  class BufferContainer
+  class ChatWindow
 
     @sounds:
       message: new Howl(urls: [
@@ -80,8 +80,10 @@
         "/sounds/message.m4r"
       ])
 
-    constructor: (bufferContainer) ->
-      @elem = $ bufferContainer
+    soundsEnabled: true
+
+    constructor: (chatWindow) ->
+      @elem = $ chatWindow
       @pusher = null
       @resize()
       @clear()
@@ -104,7 +106,7 @@
 
     addMessage: (message, classes = "") ->
       messageItem = $ document.createElement("li")
-      messageText = if message.author then "#{message.author}: #{message.content}" else message
+      messageText = if message.author? then "#{message.author}: #{message.content}" else message
       formattedMessageText = MessageFormatter.tagHyperlinks messageText
       messageItem
         .addClass "nc-chat-message-item #{classes}".trim()
@@ -112,7 +114,19 @@
         .appendTo @elem
       if @pusher then @pusher.height Math.floor((@pusher.height() - messageItem.outerHeight(true)))
       @scrollToBottom()
-      BufferContainer.sounds.message.play() if message.author
+      @playSound "message" if message.author
+
+    playSound: (sound) ->
+      if ChatWindow.sounds[sound]?
+        if @soundsEnabled
+          ChatWindow.sounds.message.play()
+          retval = true
+        else
+          retval = false
+      else
+        console.error "sound not found: #{sound}"
+        retval = false
+      return retval
 
     scrollToBottom: ->
       @elem.scrollTop @elem[0].scrollHeight

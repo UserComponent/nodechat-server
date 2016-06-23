@@ -1,27 +1,27 @@
 (function($, io) {
-  var BufferContainer, MessageFormatter, Theme, socket;
+  var ChatWindow, MessageFormatter, Theme, socket;
   socket = io();
   $(function() {
-    var $window, chatForm, chatInput, messageBuf, toggleBtns, toggleTheme;
+    var $window, chatForm, chatInput, chatWindow, toggleBtns, toggleTheme;
     $window = $(window);
     chatForm = $("#nc-message-form");
     chatInput = $("#nc-message-compose");
-    messageBuf = new BufferContainer("#nc-messages-container");
+    chatWindow = new ChatWindow("#nc-messages-container");
     toggleBtns = $(".ns-chat-toggle");
     toggleTheme = toggleBtns.filter("[name=\"toggle-theme\"]");
     toggleBtns.bootstrapSwitch();
     $window.on("resize", function() {
-      return messageBuf.resize();
+      return chatWindow.resize();
     });
     socket.on("chat-message", function(message) {
-      return messageBuf.addMessage(message);
+      return chatWindow.addMessage(message);
     }).on("chat-enter", function(username) {
-      return messageBuf.addMessage(username + " entered", "text-muted nc-chat-enter-text");
+      return chatWindow.addMessage(username + " entered", "text-muted nc-chat-enter-text");
     }).on("chat-exit", function(username) {
-      return messageBuf.addMessage(username + " left", "text-muted nc-chat-exit-text");
+      return chatWindow.addMessage(username + " left", "text-muted nc-chat-exit-text");
     });
     $window.add(chatInput).bind("keyup", "ctrl+shift+l", function(e) {
-      return messageBuf.clear();
+      return chatWindow.clear();
     });
     chatForm.on("submit", function(e) {
       var theme;
@@ -31,7 +31,7 @@
           null;
           break;
         case "/clear":
-          messageBuf.clear();
+          chatWindow.clear();
           break;
         case "/theme:light":
         case "/theme:dark":
@@ -91,21 +91,23 @@
     return Theme;
 
   })();
-  return BufferContainer = (function() {
-    BufferContainer.sounds = {
+  return ChatWindow = (function() {
+    ChatWindow.sounds = {
       message: new Howl({
         urls: ["/sounds/message.mp3", "/sounds/message.m4r"]
       })
     };
 
-    function BufferContainer(bufferContainer) {
-      this.elem = $(bufferContainer);
+    ChatWindow.prototype.soundsEnabled = true;
+
+    function ChatWindow(chatWindow) {
+      this.elem = $(chatWindow);
       this.pusher = null;
       this.resize();
       this.clear();
     }
 
-    BufferContainer.prototype.resize = function() {
+    ChatWindow.prototype.resize = function() {
       var chatForm;
       chatForm = $("#nc-message-form");
       this.height = Math.ceil(chatForm.offset().top) - 16;
@@ -113,7 +115,7 @@
       return this.elem.css("height", this.height);
     };
 
-    BufferContainer.prototype.clear = function() {
+    ChatWindow.prototype.clear = function() {
       var pusherOld;
       pusherOld = this.pusher;
       this.pusher = $(document.createElement("div"));
@@ -124,13 +126,13 @@
       }
     };
 
-    BufferContainer.prototype.addMessage = function(message, classes) {
+    ChatWindow.prototype.addMessage = function(message, classes) {
       var formattedMessageText, messageItem, messageText;
       if (classes == null) {
         classes = "";
       }
       messageItem = $(document.createElement("li"));
-      messageText = message.author ? message.author + ": " + message.content : message;
+      messageText = message.author != null ? message.author + ": " + message.content : message;
       formattedMessageText = MessageFormatter.tagHyperlinks(messageText);
       messageItem.addClass(("nc-chat-message-item " + classes).trim()).html(formattedMessageText).appendTo(this.elem);
       if (this.pusher) {
@@ -138,15 +140,31 @@
       }
       this.scrollToBottom();
       if (message.author) {
-        return BufferContainer.sounds.message.play();
+        return this.playSound("message");
       }
     };
 
-    BufferContainer.prototype.scrollToBottom = function() {
+    ChatWindow.prototype.playSound = function(sound) {
+      var retval;
+      if (ChatWindow.sounds[sound] != null) {
+        if (this.soundsEnabled) {
+          ChatWindow.sounds.message.play();
+          retval = true;
+        } else {
+          retval = false;
+        }
+      } else {
+        console.error("sound not found: " + sound);
+        retval = false;
+      }
+      return retval;
+    };
+
+    ChatWindow.prototype.scrollToBottom = function() {
       return this.elem.scrollTop(this.elem[0].scrollHeight);
     };
 
-    return BufferContainer;
+    return ChatWindow;
 
   })();
 })(jQuery, io);
