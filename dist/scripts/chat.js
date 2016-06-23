@@ -21,36 +21,53 @@
     }).on("chat-exit", function(username) {
       return chatWindow.addMessage(username + " left", "text-muted nc-chat-exit-text");
     });
-    $window.add(chatInput).bind("keyup", "ctrl+shift+l", function(e) {
-      return chatWindow.clear();
+    $window.add(chatInput).bind("keyup keydown keypress", "ctrl+l", function(e) {
+      e.preventDefault();
+      if (e.type === "keyup") {
+        return chatWindow.clear();
+      }
+    });
+    $window.add(chatInput).bind("keyup keydown keypress", "ctrl+m", function(e) {
+      e.preventDefault();
+      if (e.type === "keyup") {
+        chatWindow.soundsEnabled = chatWindow.soundsEnabled ? false : true;
+        return toggleSound.bootstrapSwitch("state", chatWindow.soundsEnabled, true);
+      }
     });
     chatForm.on("submit", function(e) {
       var sound, theme, value;
       e.preventDefault();
       value = chatInput.val();
-      switch (value) {
-        case "":
-          null;
-          break;
-        case "/clear":
-          chatWindow.clear();
-          break;
-        case "/theme light":
-        case "/theme dark":
-          theme = value.split(" ")[1];
+      if (value === "") {
+        null;
+      } else if (value.match(/^\/clear/)) {
+        chatWindow.clear();
+      } else if (value.match(/^\/theme/)) {
+        theme = value.split(" ");
+        if (theme[1]) {
+          theme = theme[1];
           Theme.set(theme);
+          if (theme !== "dark" && theme !== "light") {
+            return;
+          }
           toggleTheme.bootstrapSwitch("state", (theme === "dark" ? true : false), true);
-          break;
-        case "/sound on":
-        case "/sound off":
-        case "/sounds on":
-        case "/sounds off":
-          sound = value.split(" ")[1];
+        } else {
+          return;
+        }
+      } else if (value.match(/^\/sounds?/)) {
+        sound = value.split(" ");
+        if (sound[1]) {
+          sound = sound[1];
+          if (sound !== "on" && sound !== "off") {
+            return;
+          }
           chatWindow.soundsEnabled = sound === "on" ? true : false;
           toggleSound.bootstrapSwitch("state", chatWindow.soundsEnabled, true);
-          break;
-        default:
-          socket.emit("chat-message", value);
+        } else {
+          return;
+        }
+      } else {
+        socket.emit("chat-message", value);
       }
       return chatInput.val("");
     });

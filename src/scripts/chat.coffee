@@ -27,23 +27,45 @@
       .on "chat-enter", (username) -> chatWindow.addMessage "#{username} entered", "text-muted nc-chat-enter-text"
       .on "chat-exit", (username) -> chatWindow.addMessage "#{username} left", "text-muted nc-chat-exit-text"
 
-    $window.add(chatInput).bind "keyup", "ctrl+shift+l", (e) -> chatWindow.clear()
+    $window.add(chatInput).bind "keyup keydown keypress", "ctrl+l", (e) ->
+      e.preventDefault()
+      if e.type is "keyup" then chatWindow.clear()
+
+    $window.add(chatInput).bind "keyup keydown keypress", "ctrl+m", (e) ->
+      e.preventDefault()
+      if e.type is "keyup"
+        chatWindow.soundsEnabled = if chatWindow.soundsEnabled then false else true
+        toggleSound.bootstrapSwitch "state", chatWindow.soundsEnabled, true
+
 
     chatForm.on "submit", (e) ->
       e.preventDefault()
       value = chatInput.val()
-      switch value
-        when "" then null
-        when "/clear" then chatWindow.clear()
-        when "/theme light", "/theme dark"
-          theme = value.split(" ")[1]
+      # Do nothing if empty
+      if value == "" then null
+      # /clear command
+      else if value.match /^\/clear/ then chatWindow.clear()
+      # /theme command
+      else if value.match /^\/theme/
+        theme = value.split(" ")
+        if theme[1]
+          theme = theme[1]
           Theme.set theme
+          unless theme in ["dark", "light"] then return # validation
           toggleTheme.bootstrapSwitch "state", (if theme is "dark" then true else false), true
-        when "/sound on", "/sound off", "/sounds on", "/sounds off"
-          sound = value.split(" ")[1]
+        else return
+      # /sound command
+      else if value.match /^\/sounds?/
+        sound = value.split(" ")
+        if sound[1]
+          sound = sound[1]
+          unless sound in ["on", "off"] then return # validation
           chatWindow.soundsEnabled = if sound is "on" then true else false
           toggleSound.bootstrapSwitch "state", chatWindow.soundsEnabled, true
-        else socket.emit "chat-message", value
+        else return
+      # Messages
+      else socket.emit "chat-message", value
+      # Clear input after command, or message
       chatInput.val ""
 
     toggleTheme.on "switchChange.bootstrapSwitch", (e, state) ->
