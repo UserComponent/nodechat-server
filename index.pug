@@ -26,19 +26,26 @@ html
           small Chat Settings
         .modal-body
           .row
-            .col-xs-6.text-center
-              strong Theme
-            .col-xs-6.text-center
-              input.ns-chat-toggle(
-                type="checkbox"
-                name="toggle-theme"
-                data-size="small"
-                data-on-text="Dark"
-                data-off-text="Light"
-                data-on-color="dark"
-                data-off-color="light"
-                data-label-text="|||"
-                checked)
+            .col-xs-6.text-center: strong Theme
+            .col-xs-6.text-center: input.ns-chat-toggle(
+              type="checkbox"
+              name="toggle-theme"
+              data-size="small"
+              data-on-text="Dark"
+              data-off-text="Light"
+              data-on-color="dark"
+              data-off-color="light"
+              data-label-text="|||"
+              checked)
+          hr
+          .row
+            .col-xs-6.text-center: strong Sound
+            .col-xs-6.text-center: input.ns-chat-toggle(
+              type="checkbox"
+              name="toggle-sound"
+              data-size="small"
+              data-label-text="|||"
+              checked)
 
       //- Chat Container
       #nc-messages-container

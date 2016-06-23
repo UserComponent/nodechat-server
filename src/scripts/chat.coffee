@@ -12,6 +12,7 @@
     chatWindow   = new ChatWindow "#nc-messages-container"
     toggleBtns   = $ ".ns-chat-toggle"
     toggleTheme  = toggleBtns.filter "[name=\"toggle-theme\"]"
+    toggleSound  = toggleBtns.filter "[name=\"toggle-sound\"]"
 
     # UI Init
 
@@ -37,11 +38,19 @@
           theme = chatInput.val().split(":")[1]
           Theme.set theme
           toggleTheme.bootstrapSwitch "state", (if theme is "dark" then true else false), true
+        when "/sound:on", "/sound:off", "sounds:on", "sounds:off"
+          sound = chatInput.val().split(":")[1]
+          chatWindow.soundsEnabled = false
+          toggleSound.bootstrapSwitch "state", (if sound is "on" then true else false), true
         else socket.emit "chat-message", chatInput.val()
       chatInput.val ""
 
     toggleTheme.on "switchChange.bootstrapSwitch", (e, state) ->
       if state is true then Theme.set "dark" else Theme.set "light"
+
+    toggleSound.on "switchChange.bootstrapSwitch", (e, state) ->
+      if state is true then chatWindow.soundsEnabled = true else chatWindow.soundsEnabled = false
+
 
   # Functions and Classes
 

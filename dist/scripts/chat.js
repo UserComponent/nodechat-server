@@ -2,13 +2,14 @@
   var ChatWindow, MessageFormatter, Theme, socket;
   socket = io();
   $(function() {
-    var $window, chatForm, chatInput, chatWindow, toggleBtns, toggleTheme;
+    var $window, chatForm, chatInput, chatWindow, toggleBtns, toggleSound, toggleTheme;
     $window = $(window);
     chatForm = $("#nc-message-form");
     chatInput = $("#nc-message-compose");
     chatWindow = new ChatWindow("#nc-messages-container");
     toggleBtns = $(".ns-chat-toggle");
     toggleTheme = toggleBtns.filter("[name=\"toggle-theme\"]");
+    toggleSound = toggleBtns.filter("[name=\"toggle-sound\"]");
     toggleBtns.bootstrapSwitch();
     $window.on("resize", function() {
       return chatWindow.resize();
@@ -24,7 +25,7 @@
       return chatWindow.clear();
     });
     chatForm.on("submit", function(e) {
-      var theme;
+      var sound, theme;
       e.preventDefault();
       switch (chatInput.val()) {
         case "":
@@ -39,16 +40,31 @@
           Theme.set(theme);
           toggleTheme.bootstrapSwitch("state", (theme === "dark" ? true : false), true);
           break;
+        case "/sound:on":
+        case "/sound:off":
+        case "sounds:on":
+        case "sounds:off":
+          sound = chatInput.val().split(":")[1];
+          chatWindow.soundsEnabled = false;
+          toggleSound.bootstrapSwitch("state", (sound === "on" ? true : false), true);
+          break;
         default:
           socket.emit("chat-message", chatInput.val());
       }
       return chatInput.val("");
     });
-    return toggleTheme.on("switchChange.bootstrapSwitch", function(e, state) {
+    toggleTheme.on("switchChange.bootstrapSwitch", function(e, state) {
       if (state === true) {
         return Theme.set("dark");
       } else {
         return Theme.set("light");
+      }
+    });
+    return toggleSound.on("switchChange.bootstrapSwitch", function(e, state) {
+      if (state === true) {
+        return chatWindow.soundsEnabled = true;
+      } else {
+        return chatWindow.soundsEnabled = false;
       }
     });
   });
