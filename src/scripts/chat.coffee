@@ -4,6 +4,8 @@
 
   $ ->
 
+    # Vars
+
     $window      = $ window
     chatForm     = $ "#nc-message-form"
     chatInput    = $ "#nc-message-compose"
@@ -72,6 +74,12 @@
 
   class BufferContainer
 
+    @sounds:
+      message: new Howl(urls: [
+        "/sounds/message.mp3",
+        "/sounds/message.m4r"
+      ])
+
     constructor: (bufferContainer) ->
       @elem = $ bufferContainer
       @pusher = null
@@ -104,6 +112,7 @@
         .appendTo @elem
       if @pusher then @pusher.height Math.floor((@pusher.height() - messageItem.outerHeight(true)))
       @scrollToBottom()
+      BufferContainer.sounds.message.play() if message.author
 
     scrollToBottom: ->
       @elem.scrollTop @elem[0].scrollHeight

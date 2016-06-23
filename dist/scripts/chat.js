@@ -92,6 +92,12 @@
 
   })();
   return BufferContainer = (function() {
+    BufferContainer.sounds = {
+      message: new Howl({
+        urls: ["/sounds/message.mp3", "/sounds/message.m4r"]
+      })
+    };
+
     function BufferContainer(bufferContainer) {
       this.elem = $(bufferContainer);
       this.pusher = null;
@@ -130,7 +136,10 @@
       if (this.pusher) {
         this.pusher.height(Math.floor(this.pusher.height() - messageItem.outerHeight(true)));
       }
-      return this.scrollToBottom();
+      this.scrollToBottom();
+      if (message.author) {
+        return BufferContainer.sounds.message.play();
+      }
     };
 
     BufferContainer.prototype.scrollToBottom = function() {
