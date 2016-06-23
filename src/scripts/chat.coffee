@@ -86,7 +86,7 @@
     @sounds:
       message: new Howl(urls: [
         "/sounds/message.mp3",
-        "/sounds/message.m4r"
+        "/sounds/message.m4a"
       ])
 
     soundsEnabled: true
