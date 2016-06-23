@@ -25,31 +25,32 @@
       return chatWindow.clear();
     });
     chatForm.on("submit", function(e) {
-      var sound, theme;
+      var sound, theme, value;
       e.preventDefault();
-      switch (chatInput.val()) {
+      value = chatInput.val();
+      switch (value) {
         case "":
           null;
           break;
         case "/clear":
           chatWindow.clear();
           break;
-        case "/theme:light":
-        case "/theme:dark":
-          theme = chatInput.val().split(":")[1];
+        case "/theme light":
+        case "/theme dark":
+          theme = value.split(" ")[1];
           Theme.set(theme);
           toggleTheme.bootstrapSwitch("state", (theme === "dark" ? true : false), true);
           break;
-        case "/sound:on":
-        case "/sound:off":
-        case "sounds:on":
-        case "sounds:off":
-          sound = chatInput.val().split(":")[1];
-          chatWindow.soundsEnabled = false;
-          toggleSound.bootstrapSwitch("state", (sound === "on" ? true : false), true);
+        case "/sound on":
+        case "/sound off":
+        case "/sounds on":
+        case "/sounds off":
+          sound = value.split(" ")[1];
+          chatWindow.soundsEnabled = sound === "on" ? true : false;
+          toggleSound.bootstrapSwitch("state", chatWindow.soundsEnabled, true);
           break;
         default:
-          socket.emit("chat-message", chatInput.val());
+          socket.emit("chat-message", value);
       }
       return chatInput.val("");
     });

@@ -31,18 +31,19 @@
 
     chatForm.on "submit", (e) ->
       e.preventDefault()
-      switch chatInput.val()
+      value = chatInput.val()
+      switch value
         when "" then null
         when "/clear" then chatWindow.clear()
-        when "/theme:light", "/theme:dark"
-          theme = chatInput.val().split(":")[1]
+        when "/theme light", "/theme dark"
+          theme = value.split(" ")[1]
           Theme.set theme
           toggleTheme.bootstrapSwitch "state", (if theme is "dark" then true else false), true
-        when "/sound:on", "/sound:off", "sounds:on", "sounds:off"
-          sound = chatInput.val().split(":")[1]
-          chatWindow.soundsEnabled = false
-          toggleSound.bootstrapSwitch "state", (if sound is "on" then true else false), true
-        else socket.emit "chat-message", chatInput.val()
+        when "/sound on", "/sound off", "/sounds on", "/sounds off"
+          sound = value.split(" ")[1]
+          chatWindow.soundsEnabled = if sound is "on" then true else false
+          toggleSound.bootstrapSwitch "state", chatWindow.soundsEnabled, true
+        else socket.emit "chat-message", value
       chatInput.val ""
 
     toggleTheme.on "switchChange.bootstrapSwitch", (e, state) ->
