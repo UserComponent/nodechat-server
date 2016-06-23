@@ -110,7 +110,7 @@
   return ChatWindow = (function() {
     ChatWindow.sounds = {
       message: new Howl({
-        urls: ["/sounds/message.mp3", "/sounds/message.m4r"]
+        urls: ["/sounds/message.mp3", "/sounds/message.m4a"]
       })
     };
 
