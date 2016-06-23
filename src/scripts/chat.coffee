@@ -43,6 +43,15 @@
 
   # Functions and Classes
 
+  class MessageFormatter
+
+    @hyperlinkTLD: [ "com", "us", "ca", "net", "eu", "tv", "gov", "org" ]
+
+    @tagHyperlinks: (str) ->
+      hyperlinkText = new RegExp "(https?\\:\\/\\/)?((?:www)?\\S+\\.(?:#{@hyperlinkTLD.join("|")}))", "gi"
+      str.replace hyperlinkText, "<a href=\"http://$2\" target=\"_blank\">$1$2</a>"
+
+
   class Theme
 
     @stylesheetElement: $("#nc-chat-stylesheet")
@@ -88,9 +97,10 @@
     addMessage: (message, classes = "") ->
       messageItem = $ document.createElement("li")
       messageText = if message.author then "#{message.author}: #{message.content}" else message
+      formattedMessageText = MessageFormatter.tagHyperlinks messageText
       messageItem
-        .text messageText
         .addClass "nc-chat-message-item #{classes}".trim()
+        .html formattedMessageText
         .appendTo @elem
       if @pusher then @pusher.height Math.floor((@pusher.height() - messageItem.outerHeight(true)))
       @scrollToBottom()

@@ -10,6 +10,11 @@ body
   color $theme_font_color
   background $theme_bg_color
 
+a
+  color: lighten($bootstrap_blue, 5%)
+  &:hover
+    color: darken(@color, 15%)
+
 .modal-content
   font-family $font_family_sans
   border-radius: 2px

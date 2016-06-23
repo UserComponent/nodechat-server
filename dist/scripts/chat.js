@@ -1,5 +1,5 @@
 (function($, io) {
-  var BufferContainer, Theme, socket;
+  var BufferContainer, MessageFormatter, Theme, socket;
   socket = io();
   $(function() {
     var $window, chatForm, chatInput, messageBuf, toggleBtns, toggleTheme;
@@ -52,6 +52,20 @@
       }
     });
   });
+  MessageFormatter = (function() {
+    function MessageFormatter() {}
+
+    MessageFormatter.hyperlinkTLD = ["com", "us", "ca", "net", "eu", "tv", "gov", "org"];
+
+    MessageFormatter.tagHyperlinks = function(str) {
+      var hyperlinkText;
+      hyperlinkText = new RegExp("(https?\\:\\/\\/)?((?:www)?\\S+\\.(?:" + (this.hyperlinkTLD.join("|")) + "))", "gi");
+      return str.replace(hyperlinkText, "<a href=\"http://$2\" target=\"_blank\">$1$2</a>");
+    };
+
+    return MessageFormatter;
+
+  })();
   Theme = (function() {
     function Theme() {}
 
@@ -105,13 +119,14 @@
     };
 
     BufferContainer.prototype.addMessage = function(message, classes) {
-      var messageItem, messageText;
+      var formattedMessageText, messageItem, messageText;
       if (classes == null) {
         classes = "";
       }
       messageItem = $(document.createElement("li"));
       messageText = message.author ? message.author + ": " + message.content : message;
-      messageItem.text(messageText).addClass(("nc-chat-message-item " + classes).trim()).appendTo(this.elem);
+      formattedMessageText = MessageFormatter.tagHyperlinks(messageText);
+      messageItem.addClass(("nc-chat-message-item " + classes).trim()).html(formattedMessageText).appendTo(this.elem);
       if (this.pusher) {
         this.pusher.height(Math.floor(this.pusher.height() - messageItem.outerHeight(true)));
       }

@@ -6,6 +6,12 @@ body {
   color: #2d3237;
   background: #f0f0f0;
 }
+a {
+  color: #4b91cd;
+}
+a:hover {
+  color: #347cba;
+}
 .modal-content {
   font-family: "Helvetica", "Arial", sans-serif;
   border-radius: 2px;
