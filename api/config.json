@@ -1,0 +1,5 @@
+{
+  "creds": {
+    "mongoose_auth": "mongodb://localhost/test"
+  }
+}
