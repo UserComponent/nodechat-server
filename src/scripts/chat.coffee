@@ -19,6 +19,7 @@
     # UI Init
 
     toggleBtns.bootstrapSwitch()
+    chatInput.focus()
 
     # Events
 

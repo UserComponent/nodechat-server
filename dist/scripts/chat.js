@@ -13,6 +13,7 @@
     toggleSound = toggleBtns.filter("[name=\"toggle-sound\"]");
     toggleTheme = toggleBtns.filter("[name=\"toggle-theme\"]");
     toggleBtns.bootstrapSwitch();
+    chatInput.focus();
     $window.on("resize", function() {
       return chatWindow.resize();
     });
