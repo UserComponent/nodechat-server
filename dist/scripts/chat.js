@@ -167,14 +167,17 @@
     };
 
     ChatWindow.prototype.addMessage = function(message, classes) {
-      var formattedMessageText, messageItem, messageText;
+      var messageAuthor, messageContent, messageItem;
       if (classes == null) {
         classes = "";
       }
       messageItem = $(document.createElement("li"));
-      messageText = message.author != null ? "<span class=\"nc-chat-message-item-author\">" + message.author + "</span>" + message.content : message;
-      formattedMessageText = MessageFormatter.tagHyperlinks(messageText);
-      messageItem.addClass(("nc-chat-message-item " + classes).trim()).html(formattedMessageText).appendTo(this.elem);
+      if (message.author != null) {
+        messageContent = MessageFormatter.tagHyperlinks(message.content);
+        messageAuthor = "<span class=\"nc-chat-message-item-author\">" + message.author + "</span>";
+        message = messageAuthor + messageContent;
+      }
+      messageItem.addClass(("nc-chat-message-item " + classes).trim()).html(message).appendTo(this.elem);
       if (this.pusher) {
         this.pusher.height(Math.floor(this.pusher.height() - messageItem.outerHeight(true)));
       }

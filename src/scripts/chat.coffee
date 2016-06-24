@@ -142,11 +142,13 @@
 
     addMessage: (message, classes = "") ->
       messageItem = $ document.createElement("li")
-      messageText = if message.author? then "<span class=\"nc-chat-message-item-author\">#{message.author}</span>#{message.content}" else message
-      formattedMessageText = MessageFormatter.tagHyperlinks messageText
+      if message.author?
+        messageContent = MessageFormatter.tagHyperlinks message.content
+        messageAuthor  = "<span class=\"nc-chat-message-item-author\">#{message.author}</span>"
+        message = messageAuthor + messageContent
       messageItem
         .addClass "nc-chat-message-item #{classes}".trim()
-        .html formattedMessageText
+        .html message
         .appendTo @elem
       if @pusher then @pusher.height Math.floor((@pusher.height() - messageItem.outerHeight(true)))
       @scrollToBottom()
