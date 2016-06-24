@@ -82,7 +82,7 @@
     @hyperlinkTLD: [ "com", "us", "ca", "net", "eu", "tv", "gov", "org" ]
 
     @tagHyperlinks: (str) ->
-      hyperlinkText = new RegExp "(https?\\:\\/\\/)?((?:www)?\\S+\\.(?:#{@hyperlinkTLD.join("|")}))", "gi"
+      hyperlinkText = new RegExp "(https?\\:\\/\\/)?((?:www)?\\S+\\.(?:#{@hyperlinkTLD.join("|")})\\S*)", "gi"
       str.replace hyperlinkText, "<a href=\"http://$2\" target=\"_blank\">$1$2</a>"
 
 

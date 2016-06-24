@@ -93,7 +93,7 @@
 
     MessageFormatter.tagHyperlinks = function(str) {
       var hyperlinkText;
-      hyperlinkText = new RegExp("(https?\\:\\/\\/)?((?:www)?\\S+\\.(?:" + (this.hyperlinkTLD.join("|")) + "))", "gi");
+      hyperlinkText = new RegExp("(https?\\:\\/\\/)?((?:www)?\\S+\\.(?:" + (this.hyperlinkTLD.join("|")) + ")\\S*)", "gi");
       return str.replace(hyperlinkText, "<a href=\"http://$2\" target=\"_blank\">$1$2</a>");
     };
 
