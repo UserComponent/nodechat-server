@@ -89,5 +89,15 @@ a:hover {
   border-radius: 2px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  margin-bottom: 0.25em;
+  margin-bottom: 0.5em;
+}
+.nc-chat-message-item-author {
+  background: #d3d3d3;
+  padding: 0.125em 0.5em;
+  margin-right: 0.5em;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border: 1px solid #b5b8bb;
+  box-shadow: 0 0.25em 0.5em -0.385em #000;
 }

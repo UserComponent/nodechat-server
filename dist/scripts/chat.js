@@ -171,7 +171,7 @@
         classes = "";
       }
       messageItem = $(document.createElement("li"));
-      messageText = message.author != null ? message.author + ": " + message.content : message;
+      messageText = message.author != null ? "<span class=\"nc-chat-message-item-author\">" + message.author + "</span>" + message.content : message;
       formattedMessageText = MessageFormatter.tagHyperlinks(messageText);
       messageItem.addClass(("nc-chat-message-item " + classes).trim()).html(formattedMessageText).appendTo(this.elem);
       if (this.pusher) {

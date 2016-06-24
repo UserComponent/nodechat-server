@@ -141,7 +141,7 @@
 
     addMessage: (message, classes = "") ->
       messageItem = $ document.createElement("li")
-      messageText = if message.author? then "#{message.author}: #{message.content}" else message
+      messageText = if message.author? then "<span class=\"nc-chat-message-item-author\">#{message.author}</span>#{message.content}" else message
       formattedMessageText = MessageFormatter.tagHyperlinks messageText
       messageItem
         .addClass "nc-chat-message-item #{classes}".trim()
