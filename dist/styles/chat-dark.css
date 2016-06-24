@@ -4,7 +4,7 @@
 body {
   font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
-  color: #f0f0f0;
+  color: #e0e0e0;
   background: #2d3237;
 }
 a {
@@ -44,7 +44,7 @@ a:hover {
   border-width: 1px;
   border-style: solid;
   border-color: #606060;
-  background: #24282c;
+  background: #282c30;
   padding: 0.5em 1em;
 }
 #nc-message-form span.helper-text {
@@ -65,7 +65,7 @@ a:hover {
   z-index: 1;
 }
 #nc-chat-settings-btn:hover {
-  color: #c0c0c0;
+  color: #b3b3b3;
 }
 .nc-chat-enter-text::before,
 .nc-chat-exit-text::before {
