@@ -2,14 +2,16 @@
   var ChatWindow, MessageFormatter, Theme, socket;
   socket = io();
   $(function() {
-    var $window, chatForm, chatInput, chatWindow, toggleBtns, toggleSound, toggleTheme;
+    var $window, chatForm, chatInput, chatWindow, settingsBtn, settingsWin, toggleBtns, toggleSound, toggleTheme;
     $window = $(window);
     chatForm = $("#nc-message-form");
     chatInput = $("#nc-message-compose");
     chatWindow = new ChatWindow("#nc-messages-container");
+    settingsBtn = $("#nc-chat-settings-btn");
+    settingsWin = $("#nc-chat-settings-modal");
     toggleBtns = $(".ns-chat-toggle");
-    toggleTheme = toggleBtns.filter("[name=\"toggle-theme\"]");
     toggleSound = toggleBtns.filter("[name=\"toggle-sound\"]");
+    toggleTheme = toggleBtns.filter("[name=\"toggle-theme\"]");
     toggleBtns.bootstrapSwitch();
     $window.on("resize", function() {
       return chatWindow.resize();
@@ -33,6 +35,9 @@
         chatWindow.soundsEnabled = chatWindow.soundsEnabled ? false : true;
         return toggleSound.bootstrapSwitch("state", chatWindow.soundsEnabled, true);
       }
+    });
+    settingsWin.on("show.bs.modal hidden.bs.modal", function() {
+      return settingsBtn.toggleClass("fa-spin");
     });
     chatForm.on("submit", function(e) {
       var sound, theme, value;

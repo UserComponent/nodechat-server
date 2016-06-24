@@ -10,9 +10,11 @@
     chatForm     = $ "#nc-message-form"
     chatInput    = $ "#nc-message-compose"
     chatWindow   = new ChatWindow "#nc-messages-container"
+    settingsBtn  = $ "#nc-chat-settings-btn"
+    settingsWin  = $ "#nc-chat-settings-modal"
     toggleBtns   = $ ".ns-chat-toggle"
-    toggleTheme  = toggleBtns.filter "[name=\"toggle-theme\"]"
     toggleSound  = toggleBtns.filter "[name=\"toggle-sound\"]"
+    toggleTheme  = toggleBtns.filter "[name=\"toggle-theme\"]"
 
     # UI Init
 
@@ -37,6 +39,7 @@
         chatWindow.soundsEnabled = if chatWindow.soundsEnabled then false else true
         toggleSound.bootstrapSwitch "state", chatWindow.soundsEnabled, true
 
+    settingsWin.on "show.bs.modal hidden.bs.modal", -> settingsBtn.toggleClass "fa-spin"
 
     chatForm.on "submit", (e) ->
       e.preventDefault()
