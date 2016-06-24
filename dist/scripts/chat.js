@@ -12,6 +12,7 @@
     toggleBtns = $(".ns-chat-toggle");
     toggleSound = toggleBtns.filter("[name=\"toggle-sound\"]");
     toggleTheme = toggleBtns.filter("[name=\"toggle-theme\"]");
+    window.foo = chatWindow;
     toggleBtns.bootstrapSwitch();
     chatInput.focus();
     $window.on("resize", function() {
@@ -167,7 +168,7 @@
     };
 
     ChatWindow.prototype.addMessage = function(message, classes) {
-      var messageAuthor, messageContent, messageItem;
+      var messageAuthor, messageContent, messageItem, output;
       if (classes == null) {
         classes = "";
       }
@@ -175,9 +176,11 @@
       if (message.author != null) {
         messageContent = MessageFormatter.tagHyperlinks(message.content);
         messageAuthor = "<span class=\"nc-chat-message-item-author\">" + message.author + "</span>";
-        message = messageAuthor + messageContent;
+        output = messageAuthor + messageContent;
+      } else {
+        output = message;
       }
-      messageItem.addClass(("nc-chat-message-item " + classes).trim()).html(message).appendTo(this.elem);
+      messageItem.addClass(("nc-chat-message-item " + classes).trim()).html(output).appendTo(this.elem);
       if (this.pusher) {
         this.pusher.height(Math.floor(this.pusher.height() - messageItem.outerHeight(true)));
       }

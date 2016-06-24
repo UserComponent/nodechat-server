@@ -16,6 +16,8 @@
     toggleSound  = toggleBtns.filter "[name=\"toggle-sound\"]"
     toggleTheme  = toggleBtns.filter "[name=\"toggle-theme\"]"
 
+    window.foo = chatWindow
+
     # UI Init
 
     toggleBtns.bootstrapSwitch()
@@ -145,10 +147,12 @@
       if message.author?
         messageContent = MessageFormatter.tagHyperlinks message.content
         messageAuthor  = "<span class=\"nc-chat-message-item-author\">#{message.author}</span>"
-        message = messageAuthor + messageContent
+        output = messageAuthor + messageContent
+      else
+        output = message
       messageItem
         .addClass "nc-chat-message-item #{classes}".trim()
-        .html message
+        .html output
         .appendTo @elem
       if @pusher then @pusher.height Math.floor((@pusher.height() - messageItem.outerHeight(true)))
       @scrollToBottom()
